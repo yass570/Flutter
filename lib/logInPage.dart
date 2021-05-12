@@ -56,7 +56,7 @@ class ThisLogInPage extends State<LogInPage> {
 
   bool amplifyConfigured =false;
 
-  File image;
+  //File image;
   final picker = ImagePicker();
 
   String lng = "En";
@@ -283,8 +283,9 @@ class ThisLogInPage extends State<LogInPage> {
 
     setState(() {
       if (pickedFile != null) {
-        image = File(pickedFile.path);
+        //image = File(pickedFile.path);
         url=pickedFile.path;
+        saveToLocal();
         print('path of image selected. is : ${pickedFile.path}');
       } else {
         print('No image selected.');
@@ -949,7 +950,7 @@ class ThisLogInPage extends State<LogInPage> {
                     Container(
                       height: 160, width: _phoneWidth,
                       child: Image(
-                        image: url.contains("https://") || url.contains("http://") ? NetworkImage(url,) : FileImage(image), fit: BoxFit.fill,
+                        image: url.contains("https://") || url.contains("http://") ? NetworkImage(url,) : FileImage(File(url)), fit: BoxFit.fill,
                       ),
                     ),
 
