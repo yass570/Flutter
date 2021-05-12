@@ -229,7 +229,7 @@ class ThisLogInPage extends State<LogInPage> {
       ResetPasswordResult res = await Amplify.Auth.resetPassword(username: emailTextController.text);
 
       setState(() {
-        //var isPasswordReset = res.isPasswordReset;
+        var isPasswordReset = res.isPasswordReset;
         showResetPWCodeWidget=true;
       });
 
