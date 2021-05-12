@@ -229,7 +229,7 @@ class ThisLogInPage extends State<LogInPage> {
       ResetPasswordResult res = await Amplify.Auth.resetPassword(username: emailTextController.text);
 
       setState(() {
-        var isPasswordReset = res.isPasswordReset;
+        //var isPasswordReset = res.isPasswordReset;
         showResetPWCodeWidget=true;
       });
 
@@ -469,7 +469,7 @@ class ThisLogInPage extends State<LogInPage> {
                             )
                         ),
 
-                        child: Center(child: Text(LanguagesPages().getWord("Sing In", lng)),),
+                        child: Center(child: Text(LanguagesPages().getWord("Sign In", lng)),),
                       ),
                     ),
 
@@ -816,10 +816,12 @@ class ThisLogInPage extends State<LogInPage> {
                           ),
 
                           Container(
+
                             margin: EdgeInsets.only(top: 30),
                             height: 40, width: 100,
                             color: Colors.white,
                             child: TextField(
+                              textAlign: TextAlign.center,
                               decoration: InputDecoration(
                                 hintText: LanguagesPages().getWord('Code', lng),
                               ),
@@ -882,6 +884,7 @@ class ThisLogInPage extends State<LogInPage> {
                       height: 40, width: 100,
                       color: Colors.white,
                       child: TextField(
+                        textAlign: TextAlign.center,
                         decoration: InputDecoration(
                           hintText: LanguagesPages().getWord('Code', lng),
                         ),
@@ -1133,7 +1136,6 @@ class ThisLogInPage extends State<LogInPage> {
       default:
         return signInWidget();
     }
-    return Container();
   }
 
 
