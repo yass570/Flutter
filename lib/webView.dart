@@ -9,6 +9,7 @@ class WebViewPage extends StatelessWidget{
 
   const WebViewPage({Key key, this.logInState}) : super(key: key);
 
+  final String url = "https://saloneverywhere.com/sample-profiles";
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +37,7 @@ class WebViewPage extends StatelessWidget{
       ),
     ),
 
-      body: WebView(initialUrl: "https://saloneverywhere.com/sample-profiles",javascriptMode: JavascriptMode.unrestricted,),
+      body: WebView(initialUrl: url,javascriptMode: JavascriptMode.unrestricted,),
     );
   }
 

@@ -6,10 +6,12 @@ import 'package:amplify_flutter/amplify.dart';
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:testapp/amplifyconfiguration.dart';
+import 'package:testapp/languages.dart';
 import 'package:testapp/webView.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:image_picker/image_picker.dart';
+
 
 
 class LogInPage extends StatefulWidget {
@@ -34,7 +36,7 @@ class ThisLogInPage extends State<LogInPage> {
   Color backgroundColor= Colors.white;
   Color appBarBackColor = Colors.indigo.withOpacity(0.2);
   Color appBarTxtColor = Colors.white;
-  String widgetSwitcher ="LogIn";
+  String widgetSwitcher ="SignIn";
   bool showPassword= false;
   bool showConfigCodeWidget= false;
   bool showResetPWCodeWidget= false;
@@ -57,8 +59,27 @@ class ThisLogInPage extends State<LogInPage> {
   File image;
   final picker = ImagePicker();
 
+  String lng = "En";
+  bool showLanguageWidget=true;
 
   /// Functions *******************************
+
+  Future<bool> readFromLocal()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    /// if first time connection u see language widget else u ll not see it
+    showLanguageWidget = !prefs.containsKey("language");
+    lng = prefs.getString("language") ?? "En";
+
+    setState(() {});
+    return true;
+  }
+
+  saveToLocal()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString("language", lng);
+    readFromLocal();
+
+  }
 
   void configureAmplify() async {
     if (!mounted) return;
@@ -87,7 +108,7 @@ class ThisLogInPage extends State<LogInPage> {
 
     try {
       final user = await Amplify.Auth.getCurrentUser();
-      print("user is id  :: ${user.userId}");
+      print("user id is  :: ${user.userId}");
       setState(() {
         myEmail= user.username;
         loginState=true;
@@ -137,14 +158,14 @@ class ThisLogInPage extends State<LogInPage> {
       }catch(er){
 
         setState(() {
-          signInError="Incorrect Email or Password";
+          signInError=LanguagesPages().getWord("Incorrect Email or Password", lng);
           loginState=false;
           signInLoading=false;
         });
       }
     }else{
       setState(() {
-        signInError="Incorrect Email or Password";
+        signInError=LanguagesPages().getWord("Incorrect Email or Password", lng);
         loginState=false;
         signInLoading=false;
       });
@@ -162,7 +183,7 @@ class ThisLogInPage extends State<LogInPage> {
       });
 
       try {
-        final CognitoSignUpOptions options = CognitoSignUpOptions(userAttributes: {'email': emailTextController.text});
+        final CognitoSignUpOptions options = CognitoSignUpOptions(userAttributes: {LanguagesPages().getWord('email', lng): emailTextController.text});
         await Amplify.Auth.signUp(username: emailTextController.text, password: passwordTextController.text, options: options).then((value) {
 
           setState(() {
@@ -173,7 +194,7 @@ class ThisLogInPage extends State<LogInPage> {
         });
       }catch(err){
         setState(() {
-          signUpError="Incorrect Email or Password";
+          signUpError=LanguagesPages().getWord("Incorrect Email or Password", lng);
           showConfigCodeWidget=false;
           signInLoading=false;
         });
@@ -182,19 +203,19 @@ class ThisLogInPage extends State<LogInPage> {
 
       if(emailTextController.text.length<5 || emailTextController.text.contains(" ") || !emailTextController.text.contains("@")){
         setState(() {
-          signUpError="Incorrect Email address";
+          signUpError=LanguagesPages().getWord("Incorrect Email address", lng);
         });
       }else if (confirmPWTextController.text!=passwordTextController.text) {
         setState(() {
-          signUpError="Incorrect  Password do not much";
+          signUpError=LanguagesPages().getWord("Password do not match", lng);
         });
       }else if(passwordTextController.text.length<=6){
         setState(() {
-          signUpError="Password length min ${6+1} character";
+          signUpError=LanguagesPages().getWord("Password length min 7 character", lng);
         });
       }else {
         setState(() {
-          signUpError="Incorrect unknown";
+          signUpError=LanguagesPages().getWord("Unknown Error", lng);
         });
       }
     }
@@ -214,7 +235,7 @@ class ThisLogInPage extends State<LogInPage> {
       print("Error 214 :: $er");
     }
     setState(() {
-      resetWMsg ="Check you email address, and follow the link to reset your password";
+      resetWMsg =LanguagesPages().getWord("Check your email address, and follow the link to reset your password", lng);
     });
   }
 
@@ -223,7 +244,7 @@ class ThisLogInPage extends State<LogInPage> {
       await Amplify.Auth.confirmPassword(username: emailTextController.text, newPassword: passwordTextController.text, confirmationCode: configCodeTextController.text).then((value) {
         setState(() {
           resetVariables();
-          widgetSwitcher='SignIn';
+          widgetSwitcher=LanguagesPages().getWord('SignIn', lng);
           //showResetPWCodeWidget=false;
         });
       });
@@ -301,7 +322,7 @@ class ThisLogInPage extends State<LogInPage> {
       child: TextFormField(
         decoration: InputDecoration(
           icon: Icon(Icons.email),
-          hintText: 'Email Address',
+          hintText: LanguagesPages().getWord('Email Address', lng),
         ),
         controller: emailTextController,
 
@@ -329,7 +350,7 @@ class ThisLogInPage extends State<LogInPage> {
               obscuringCharacter: "*",
               decoration: InputDecoration(
                 icon: Icon(Icons.vpn_key),
-                hintText: 'Password',
+                hintText: LanguagesPages().getWord('Password', lng),
               ),
               controller: passwordTextController,
 
@@ -372,7 +393,7 @@ class ThisLogInPage extends State<LogInPage> {
               obscuringCharacter: "*",
               decoration: InputDecoration(
                 icon: Icon(Icons.vpn_key),
-                hintText: 'Confirm Password',
+                hintText: LanguagesPages().getWord('Confirm Password', lng),
               ),
               controller: confirmPWTextController,
 
@@ -445,7 +466,7 @@ class ThisLogInPage extends State<LogInPage> {
                             )
                         ),
 
-                        child: Center(child: Text("Sing In"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Sing In", lng)),),
                       ),
                     ),
 
@@ -462,7 +483,7 @@ class ThisLogInPage extends State<LogInPage> {
                         height: 30, width: 90,
 
 
-                        child: Center(child: Text("Sign Up"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Sign Up", lng)),),
                       ),
                     ),
 
@@ -477,7 +498,7 @@ class ThisLogInPage extends State<LogInPage> {
 
                       child: Container(
                         height: 30, width: 140,
-                        child: Center(child: Text("Forgot Password"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Forgot Password", lng)),),
                       ),
                     ),
                   ],
@@ -545,7 +566,7 @@ class ThisLogInPage extends State<LogInPage> {
                         obscuringCharacter: "*",
                         decoration: InputDecoration(
                           icon: Icon(Icons.vpn_key),
-                          hintText: 'Password',
+                          hintText: LanguagesPages().getWord('Password', lng),
                         ),
                         controller: confirmPWTextController,
 
@@ -597,7 +618,7 @@ class ThisLogInPage extends State<LogInPage> {
                             )
                         ),
 
-                        child: Center(child: Text("Sign Up"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Sign Up", lng)),),
                       ),
                     ),
 
@@ -614,7 +635,7 @@ class ThisLogInPage extends State<LogInPage> {
                         height: 30, width: 90,
 
 
-                        child: Center(child: Text("Sign In"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Sign In", lng)),),
                       ),
                     ),
 
@@ -629,7 +650,7 @@ class ThisLogInPage extends State<LogInPage> {
 
                       child: Container(
                         height: 30, width: 140,
-                        child: Center(child: Text("Forgot Password"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Forgot Password", lng)),),
                       ),
                     ),
                   ],
@@ -712,7 +733,7 @@ class ThisLogInPage extends State<LogInPage> {
                             )
                         ),
 
-                        child: Center(child: Text("Reset PassWord"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Reset PassWord", lng)),),
                       ),
                     ),
 
@@ -729,7 +750,7 @@ class ThisLogInPage extends State<LogInPage> {
                         height: 30, width: 90,
 
 
-                        child: Center(child: Text("Sign In"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Sign In", lng)),),
                       ),
                     ),
 
@@ -744,7 +765,7 @@ class ThisLogInPage extends State<LogInPage> {
 
                       child: Container(
                         height: 30, width: 140,
-                        child: Center(child: Text("Sign Up"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Sign Up", lng)),),
                       ),
                     ),
                   ],
@@ -797,7 +818,7 @@ class ThisLogInPage extends State<LogInPage> {
                             color: Colors.white,
                             child: TextField(
                               decoration: InputDecoration(
-                                hintText: 'Code',
+                                hintText: LanguagesPages().getWord('Code', lng),
                               ),
                               controller: configCodeTextController,
                             ),
@@ -816,7 +837,7 @@ class ThisLogInPage extends State<LogInPage> {
                                 color: Colors.blue,
                                 borderRadius: BorderRadius.all(Radius.circular(10)),
                               ),
-                              child: Center(child: Text("Validate"),),
+                              child: Center(child: Text(LanguagesPages().getWord("Validate", lng)),),
                             ),
                           ),
                         ],
@@ -859,7 +880,7 @@ class ThisLogInPage extends State<LogInPage> {
                       color: Colors.white,
                       child: TextField(
                         decoration: InputDecoration(
-                          hintText: 'Code',
+                          hintText: LanguagesPages().getWord('Code', lng),
                         ),
                         controller: configCodeTextController,
                       ),
@@ -875,7 +896,7 @@ class ThisLogInPage extends State<LogInPage> {
                       child: Container(
                         height: 40, width: 80,
                         color: Colors.blue,
-                        child: Center(child: Text("Validate"),),
+                        child: Center(child: Text(LanguagesPages().getWord("Validate", lng)),),
                       ),
                     ),
                   ],
@@ -912,8 +933,9 @@ class ThisLogInPage extends State<LogInPage> {
                   margin: EdgeInsets.only(bottom: 10),
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: Row(
+                    mainAxisAlignment: lng=="Ar" ? MainAxisAlignment.end : MainAxisAlignment.start,
                     children: [
-                      Text("Profile Picture", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                      Text(LanguagesPages().getWord("Profile Picture", lng), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
                     ],
                   )
               ),
@@ -957,8 +979,11 @@ class ThisLogInPage extends State<LogInPage> {
                   margin: EdgeInsets.only(top: 10),
                   padding: EdgeInsets.only(left: 10, right: 10),
                   child: Row(
+                    textDirection: lng=="Ar" ? TextDirection.rtl :TextDirection.ltr,
                     children: [
-                      Text("Email: $myEmail", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                      Text("${LanguagesPages().getWord("Email", lng)}", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                      Text(" : ", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
+                      Text(" $myEmail", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),
                     ],
                   )
               ),
@@ -980,7 +1005,7 @@ class ThisLogInPage extends State<LogInPage> {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     margin: EdgeInsets.only(bottom: 10, top: 60,left: 20, right: 20),
-                    child: Center(child: Text("Visit the Website", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),),
+                    child: Center(child: Text(LanguagesPages().getWord("Visit the Website", lng), style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),),),
                 ),
               ),
 
@@ -991,13 +1016,108 @@ class ThisLogInPage extends State<LogInPage> {
     );
   }
 
-  Widget webViewWidget(){
-    //return WebView(initialUrl: "https://saloneverywhere.com/sample-profiles",javascriptMode: JavascriptMode.unrestricted,);
+  Widget languageWidget(){
+    return Container(
+      //height: 100, //width: 100,
+      color: Colors.cyanAccent.withOpacity(0.5),
+      child: Center(
+        child: Container(
+          height: 280, width: _phoneWidth-40,
+          //color: Colors.cyan,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: lng=="Ar" ? Colors.blue[100] : Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Radio(value: "Ar", groupValue: lng, onChanged: (_){setState(() {lng="Ar";});}),
+                    Text(' العربية ',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
+                    Container(
+                      height: 40, width: 60,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(image: AssetImage("lib/images/arabic.png"), fit: BoxFit.fill)
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: lng=="En" ? Colors.blue[100] : Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Radio(value: "En", groupValue: lng, onChanged: (_){setState(() {lng="En";});}),
+                    Text('English',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
+                    Container(
+                      height: 40, width: 60,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(image: AssetImage("lib/images/england.png"), fit: BoxFit.fill)
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: lng=="Fr" ? Colors.blue[100] : Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Radio(value: "Fr", groupValue: lng, onChanged: (_){setState(() {lng="Fr";});}),
+                    Text('Français',style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20,),),
+                    Container(
+                      height: 40, width: 60,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(image: AssetImage("lib/images/french.png"), fit: BoxFit.fill)
+                      ),
+                    )
+                  ],
+                ),
+              ),
+
+              InkWell(
+                onTap: (){
+                  saveToLocal();
+                },
+
+                child: Container(
+                  margin: EdgeInsets.only(top: 30),
+                  height: 40, width: 80,
+                  color: Colors.blue,
+                  child: Center(child: Text(LanguagesPages().getWord("Validate", lng), style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),),),
+
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Widget switcher(){
     switch(widgetSwitcher){
-      case "LogIn":
+      case "SignIn":
         return signInWidget();
         break;
       case "SignUp":
@@ -1019,7 +1139,10 @@ class ThisLogInPage extends State<LogInPage> {
 
     super.initState();
     // TODO: implement initState
-    configureAmplify();
+    readFromLocal().then((value) {
+      configureAmplify();
+    });
+
 
   }
 
@@ -1039,24 +1162,43 @@ class ThisLogInPage extends State<LogInPage> {
           children: [
             Text(appName,style: TextStyle(color: appBarTxtColor),),
 
-            loginState ?
-            InkWell(
-              onTap: (){
-                signOut();
-              },
+           Row(
+             children: [
 
-              child: Icon(Icons.logout),
-            ) : Container(),
+               Container(
+                 margin: EdgeInsets.only(right: 20),
+                 child: InkWell(
+                   onTap: (){
+                     setState(() {
+                       showLanguageWidget=true;
+                     });
+                   },
+                   child: Text(lng),
+                 ),
+               ),
+
+               loginState ?
+               InkWell(
+                 onTap: (){
+                   signOut();
+                 },
+
+                 child: Icon(Icons.logout),
+               ) : Container(),
+             ],
+           ),
           ],
         ),
       ),
 
-      body: loading ? Center(child: CircularProgressIndicator(),) :
-      loginState
-          ?
-      profile()
-          :
-      Container(
+      body:
+      loading ? Center(child: CircularProgressIndicator(),) :
+          showLanguageWidget ? languageWidget() :
+          loginState
+              ?
+          profile()
+              :
+          Container(
         margin: EdgeInsets.only(left: 10, right: 10),
         child: Center(
           child: ListView(
