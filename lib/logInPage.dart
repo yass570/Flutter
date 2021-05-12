@@ -69,6 +69,7 @@ class ThisLogInPage extends State<LogInPage> {
     /// if first time connection u see language widget else u ll not see it
     showLanguageWidget = !prefs.containsKey("language");
     lng = prefs.getString("language") ?? "En";
+    url = prefs.getString("profilePicture") ?? "https://images.pexels.com/photos/462118/pexels-photo-462118.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500";
 
     setState(() {});
     return true;
@@ -77,6 +78,7 @@ class ThisLogInPage extends State<LogInPage> {
   saveToLocal()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString("language", lng);
+    prefs.setString("profilePicture", url);
     readFromLocal();
 
   }
