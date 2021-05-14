@@ -961,7 +961,10 @@ class ThisLogInPage extends State<LogInPage> {
               ),
               Container(
                   height: 160, width: _phoneWidth,
-                  color: Colors.blue,
+                  //color: Colors.blue,
+                decoration: BoxDecoration(
+                    image: DecorationImage(image: AssetImage("lib/images/arabic.png"), fit: BoxFit.fill)
+                ),
                 child: Stack(
                   children: [
                     Container(

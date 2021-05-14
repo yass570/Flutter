@@ -56,6 +56,7 @@ flutter:
     - lib/images/arabic.png
     - lib/images/england.png
     - lib/images/french.png
+    - lib/images/noPicture.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
