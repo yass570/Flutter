@@ -229,7 +229,7 @@ class ThisLogInPage extends State<LogInPage> {
       ResetPasswordResult res = await Amplify.Auth.resetPassword(username: emailTextController.text);
 
       setState(() {
-        //var isPasswordReset = res.isPasswordReset;
+        // var isPasswordReset = res.isPasswordReset;
         showResetPWCodeWidget=true;
       });
 
@@ -246,7 +246,7 @@ class ThisLogInPage extends State<LogInPage> {
       await Amplify.Auth.confirmPassword(username: emailTextController.text, newPassword: passwordTextController.text, confirmationCode: configCodeTextController.text).then((value) {
         setState(() {
           resetVariables();
-          widgetSwitcher=LanguagesPages().getWord('SignIn', lng);
+          widgetSwitcher="SignIn";
           //showResetPWCodeWidget=false;
         });
       });
@@ -457,19 +457,24 @@ class ThisLogInPage extends State<LogInPage> {
                         signInFunction();
                       },
 
-                      child: Container(
-                        height: 40, width: 90,
-                        padding: EdgeInsets.only(left: 15, right: 15, bottom: 2),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.blue.withOpacity(0.4),
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.orangeAccent,
-                            )
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 40,
+                            padding: EdgeInsets.only(left: 15, right: 15, bottom: 2),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                color: Colors.blue.withOpacity(0.4),
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.orangeAccent,
+                                )
+                            ),
 
-                        child: Center(child: Text(LanguagesPages().getWord("Sign In", lng)),),
+                            child: Center(child: Text(LanguagesPages().getWord("Sign In", lng)),),
+                          ),
+                        ],
                       ),
                     ),
 
@@ -484,8 +489,6 @@ class ThisLogInPage extends State<LogInPage> {
 
                       child: Container(
                         height: 30, width: 90,
-
-
                         child: Center(child: Text(LanguagesPages().getWord("Sign Up", lng)),),
                       ),
                     ),
@@ -609,19 +612,24 @@ class ThisLogInPage extends State<LogInPage> {
                         signUpFunction();
                       },
 
-                      child: Container(
-                        height: 40, width: 90,
-                        padding: EdgeInsets.only(left: 15, right: 15, bottom: 2),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.blue.withOpacity(0.4),
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.orangeAccent,
-                            )
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 40,
+                            padding: EdgeInsets.only(left: 15, right: 15, bottom: 2),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                color: Colors.blue.withOpacity(0.4),
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.orangeAccent,
+                                )
+                            ),
 
-                        child: Center(child: Text(LanguagesPages().getWord("Sign Up", lng)),),
+                            child: Center(child: Text(LanguagesPages().getWord("Sign Up", lng)),),
+                          ),
+                        ],
                       ),
                     ),
 
@@ -724,20 +732,26 @@ class ThisLogInPage extends State<LogInPage> {
 
                       },
 
-                      child: Container(
-                        height: 40, width: 140,
-                        padding: EdgeInsets.only(left: 15, right: 15, bottom: 2),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.blue.withOpacity(0.4),
-                            border: Border.all(
-                              width: 2,
-                              color: Colors.orangeAccent,
-                            )
-                        ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            height: 40,
+                            padding: EdgeInsets.only(left: 15, right: 15, bottom: 2),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.all(Radius.circular(10)),
+                                color: Colors.blue.withOpacity(0.4),
+                                border: Border.all(
+                                  width: 2,
+                                  color: Colors.orangeAccent,
+                                )
+                            ),
 
-                        child: Center(child: Text(LanguagesPages().getWord("Reset PassWord", lng)),),
+                            child: Center(child: Text(LanguagesPages().getWord("Reset PassWord", lng)),),
+                          ),
+                        ],
                       ),
+
                     ),
 
                     /// SignIn button
